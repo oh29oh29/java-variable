@@ -111,6 +111,65 @@ System.out.println("boolean 리터럴 2: " + booleanLiteral2);
 
 ![변수초기화](images/IMG_initialize_01.jpg)
 
+#### 초기화 종류에 대하여
+
+변수를 초기화하는 방법에는 몇 가지가 존재한다.  
+
+1. 명시적 초기화 (explicit initialization)  
+- 변수 선언과 동시에 초기화 하는 방법이다.
+- 인스턴스 변수, 클래스 변수, 지역 변수 모두 사용 가능하며 가장 최우선적으로 고려되는 방법이다.
+
+2. 초기화 블럭 (initialization block)
+- 인스턴스 변수, 클래스 변수에 대하여 사용 가능하다.
+- 인스턴스 초기화 블럭과 클래스 초기화 블럭으로 나뉜다.
+- 인스턴스 초기화 블럭 같은 경우는 모든 생성자가 공통으로 수행해야 하는 로직이 있을 경우 사용한다.
+
+3. 생성자 (constructor)
+- 인스턴스 생성 시에 생성자 메서드 안에서 초기화 하는 방법이다.
+
+아래 코드는 초기화 방법과 호출 순서를 확인하기 위해 작성되었다.
+```java
+public class InitializationStudy {
+
+    /**
+     * 명시적 초기화 (explicit initialization)
+     * */
+    private int explicitVariable = 0;
+
+    private int instanceVariable;
+    private static int staticVariable;
+
+    /**
+     * Static Initialization Block
+     * */
+    static {
+        staticVariable = 10;
+        System.out.println("Static Initialization Block...");
+    }
+
+    /**
+     * Instance Initialization Block
+     * */
+    {
+        instanceVariable = 20;
+        System.out.println("Instance Initialization Block...");
+    }
+
+    public InitializationStudy() {
+        System.out.println("Constructor...");
+    }
+
+    public static void main(String[] args) {
+        new InitializationStudy();
+    }
+}
+```
+
+아래와 같이 클래스 초기화 블럭 -> 인스턴스 초기화 블럭 -> 생성자 순으로 호출되는 것을 확인할 수 있다.  
+
+![변수초기화종류](images/IMG_initialize_02.png)
+
+
 ## 변수의 스코프와 라이프타임
 
 변수들은 사용 가능한 범위를 가진다.  
@@ -151,15 +210,53 @@ globalVariable 같은 변수는 인스턴스가 생성될 때 생성되기 때�
 
 main() 메서드 안에서 인스턴스 변수인 globalVariable 은 사용할 수 없다.  
 main() 메서드는 static 메서드이 때문에 static 변수만 사용할 수 있다.  
-static 으로 선언된 변수(staticVariable)는 JVM 메모리에 최초 저장되고 생성된 모든 인스턴스에서 공유한다.  
+static 으로 선언된 변수(staticVariable)는 클래스가 처음 로딩될 때 JVM 메모리에 한 번만 저장되고 생성된 모든 인스턴스에서 공유한다.  
 static 변수는 클래스 변수라고도 한다.  
 클래스 변수는 클래스명.변수명 형태로 사용하는것을 권장한다.  
 
 스택 영역에 생성된 변수의 라이프타임은 블럭에 의해 결정된다.  
 블럭 내에서 선언된 변수는 블럭이 종료될 때 스택 영역에서 제거된다.  
+
 인스턴스 변수: 해당 인스턴스가 생성되고 GC 에 의해 제거되기 전까지 남아있는다.  
 클래스 변수: 프로그램이 시작될 때 생성되고 종료될 때까지 남아있는다.  
 지역 변수: 해당 변수가 선언된 블럭이 시작되고 종료될 때까지 남아있는다.  
+
+## 형 변환
+
+#### 타입 캐스팅과 타입 프로모션에 대하여
+
+타입 캐스팅이란, 자신의 표현 범위를 모두 포함하지 못한 타입으로의 변환을 의미한다.  
+예를 들면, 실수형에서 정수형으로의 형 변환 또는 같은 정수형이더라도 큰 범위의 정수형에서 작은 범위의 정수형으로의 형 변환 같은 경우라고 할 수 있다.  
+원본 데이터의 손실이 발생할 수 있는 형 변환이다.  
+
+타입 프로모션이란, 자신의 표현 범위를 모두 포함하는 타입으로의 변환을 의미한다.  
+예를 들면, 정수형에서 실수형으로의 형 변환 또는 같은 정수형이더라도 작은 범위의 정수형에서 큰 범위의 정수형으로의 형 변환 같은 경우라고 할 수 있다.  
+원본 데이터의 손실이 발생하지 않는 형 변환이다.
+
+아래는 타입 캐스팅과 타입 프로모션에 대하여 확인해보기 위해 작성하였다.
+```java
+public class TypeConversionStudy {
+
+    public static void main(String[] args) {
+        int intVariable = 1_000_000;
+        long longVariable = intVariable;
+        float floatVariable = intVariable;
+        double doubleVariable = intVariable;
+        System.out.println("타입 프로모션 longVariable: " + longVariable);
+        System.out.println("타입 프로모션 floatVariable: " + floatVariable);
+        System.out.println("타입 프로모션 doubleVariable: " + doubleVariable);
+
+        short shorVariable = (short) intVariable;
+        byte byteVariable = (byte) intVariable;
+        System.out.println("타입 캐스팅 shortVariable: " + shorVariable);
+        System.out.println("타입 캐스팅 byteVariable: " + byteVariable);
+    }
+}
+```
+
+![형변환](images/IMG_type_conversion_01.png)
+
+코드에서 알 수 있듯이 타입 캐스팅같은 경우 변환하고자 하는 타입에 대하여 명시해줘야 한다.
 
 <hr>
 
