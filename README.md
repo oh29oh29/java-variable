@@ -258,6 +258,133 @@ public class TypeConversionStudy {
 
 코드에서 알 수 있듯이 타입 캐스팅같은 경우 변환하고자 하는 타입에 대하여 명시해줘야 한다.
 
+## 배열
+
+배열은 동일한 데이터 타입을 정해진 개수 만큼 저장하는 참조형 변수이다.     
+배열의 크기는 long 이 아닌 int 또는 short 값으로 지정해야한다.  
+
+```java
+public class ArrayStudy {
+
+    public static void main(String[] args) {
+        int[] intArray = new int[Integer.MAX_VALUE + 1];
+    }
+}
+```
+
+만약 int 형 범위 밖의 값으로 초기 크기를 지정한다면 런타임 시 아래와 같은 오류가 발생한다.  
+
+![array크기](images/IMG_array_01.png)
+
+배열의 부모클래스는 Object 클래스이다.  
+또한 모든 배열은 인터페이스 Cloneable 및 java.io.Serializable 을 구현한다.  
+
+#### 1차원 배열
+
+1차원 배열 선언의 일반적인 방식은 다음과 같다.  
+```java
+public class ArrayStudy {
+    int intArray[];  // type variable_name[]
+    int[] intArray2; // type[] variable_name
+}
+```
+
+배열은 new 연산자와 함께 크기를 명시해서 생성했을 때 힙 메모리 영역에 저장된다.
+```java
+public class ArrayStudy {
+
+    public static void main(String[] args) {
+        int intArray[];            // declaring array
+        intArray = new int[6];    // allocating memory to array
+    }
+}
+```
+
+![1차원 array 메모리](images/IMG_array_03.jpg)
+
+배열의 인덱스는 0부터 시작해서 전체 배열의 크기 - 1 로 끝난다.  
+만약, 배열의 크기를 벗어난 인덱스로 접근하게 될 경우 어떻게 될까?
+아래와 같이 런타임 시, ArrayIndexOutOfBoundsException 이 발생하는 것을 확인할 수 있다.
+
+![array크기](images/IMG_array_02.png)
+
+#### 다차원 배열
+
+배열에는 1차원 외에 다차원으로도 생성할 수 있다.  
+배열의 배열로 각각의 엘리먼트는 또 다른 배열의 주소를 참조하고 있다.  
+
+다차원 배열의 선언은 다음과 같다.  
+```java
+public class ArrayStudy {
+    int intArray[][] = new int[10][20];             // 2D array or matrix
+    int intArray2[][] = { {1, 2, 3}, {4, 5, 6} };   // declaring and initializing 2D array    
+    
+    long longArray[][][] = new long[10][20][30];    // 3D array
+}
+```
+
+![다차원 array 메모](images/IMG_array_04.jpg)
+
+#### 배열의 clone
+
+1차원 배열인 경우 clone() 메서드를 사용하면 deep copy 가 수행된다.
+
+```java
+int[] oneArray = new int[]{1, 2, 3};
+int[] cloneOneArray = oneArray.clone();
+System.out.println("oneArray reference: " + oneArray);
+System.out.println("cloneOneArray reference: " + cloneOneArray);
+System.out.println("oneArray == cloneOneArray: " + (oneArray == cloneOneArray));
+```
+
+![1차원 배열 clone](images/IMG_array_05.png)
+
+다차원 배열인 경우에는 clone() 메서드를 사용하면 shallow copy 가 수행된다.  
+즉, 복사된 각각의 상위 배열은 동일한 하위 배열을 참조한다. 
+
+```java
+int[][] multiArray = new int[][]{ {1, 2}, {3, 4} };
+int [][] cloneMultiArray = multiArray.clone();
+System.out.println("multiArray reference: " + multiArray);
+System.out.println("cloneMultiArray reference: " + cloneMultiArray);
+System.out.println("multiArray == cloneMultiArray: " + (multiArray == cloneMultiArray));
+System.out.println("multiArray[0] reference: " + multiArray[0]);
+System.out.println("cloneMultiArray[0] reference: " + cloneMultiArray[0]);
+System.out.println("multiArray[0] == cloneMultiArray[0]: " + (multiArray[0] == cloneMultiArray[0]));
+```
+
+![차원 배열 clone](images/IMG_array_06.png)
+
+## 타입추론, Var
+
+var 키워드는 자바 10 에서 처음 소개되었다.  
+타입추론은 주변 컨텍스트를 기반으로 변수의 데이터 타입을 자동으로 감지하는 var 키워드에서 사용된다.  
+
+```java
+public class VarStudy {
+
+    public static void main(String[] args) {
+        var intVariable = 10;
+        var doubleVariable = 1.1;
+        var charVariable = 'A';
+        var stringVariable = "variable";
+        var booleanVariable = true;
+
+        System.out.println("intVariable: " + intVariable);
+        System.out.println("doubleVariable: " + doubleVariable);
+        System.out.println("charVariable: " + charVariable);
+        System.out.println("stringVariable: " + stringVariable);
+        System.out.println("booleanVariable: " + booleanVariable);
+    }
+}
+```
+
+![var](images/IMG_var_01.png)
+
+지역 변수 선언에서 사용할 있으며 명시적 초기화와 함께 사용해야 한다.  
+인스턴스 변수나 전역 변수에서는 사용할 수 없으며 제네릭 타입에서도 사용할 수 없다.  
+또한, 메서드의 매개변수와 리턴으로도 사용할 수 없다.
+
 <hr>
 
 #### References
@@ -265,5 +392,7 @@ public class TypeConversionStudy {
 > 웹 문서
 > - [geeksforgeeks | Variables in Java](https://www.geeksforgeeks.org/variables-in-java/)
 > - [geeksforgeeks | Data types in Java](https://www.geeksforgeeks.org/data-types-in-java/)
+> - [geeksforgeeks | Arrays in Java](https://www.geeksforgeeks.org/arrays-in-java/)
+> - [geeksforgeeks | var keyword in Java](https://www.geeksforgeeks.org/var-keyword-in-java/)
 > - [자바 데이터 타입, 변수 그리고 배열](https://blog.naver.com/hsm622/222144931396)
 > - [프로그래머스 | 변수의 scope와 static](https://programmers.co.kr/learn/courses/5/lessons/231)
